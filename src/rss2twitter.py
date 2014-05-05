@@ -75,9 +75,11 @@ def main():
                 'link': entry['link'],
                 'title': entry['title'],
                 'summary': entry['summary'],
-                'hashtag': ' '.join(['#%s' % i for i in entry['tags'][0]['term'].split()[:2]]),
+                #'hashtag': ' '.join(['#%s' % i for i in entry['tags'][0]['term'].split()[:2]]),
+                'published_parsed' : entry['published_parsed'],
             }
-            post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
+            #post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
+            post_update('%s %s' % (rss['title'], rss['link']))
 
             # We keep the first feed in the cache, to use rss2twitter in normal mode the next time
             if tweet_count == 0:
@@ -92,12 +94,14 @@ def main():
             'link': feed['entries'][0]['link'],
             'title': feed['entries'][0]['title'],
             'summary': feed['entries'][0]['summary'],
-            'hashtag': ' '.join(['#%s' % i for i in feed['entries'][0]['tags'][0]['term'].split()[:2]]),
+            #'hashtag': ' '.join(['#%s' % i for i in feed['entries'][0]['tags'][0]['term'].split()[:2]]),
+            'published_parsed' : feed['entries'][0]['published_parsed'],
         }
         # compare with cache
-        if cache['id'] != rss['id']:
+        if cache['id'] != rss['id'] and cache['published_parsed'] < rss['published_parsed']:
             #print 'new post'
-            post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
+            #post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
+            post_update('%s %s' % (rss['title'], rss['link']))
             cPickle.dump(rss, open('cache.dat', 'wb'), -1)
 
 
