@@ -98,12 +98,16 @@ def main():
             'published_parsed' : feed['entries'][0]['published_parsed'],
         }
         # compare with cache
-        if cache['id'] != rss['id'] and cache['published_parsed'] < rss['published_parsed']:
-            #print 'new post'
-            #post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
-            post_update('%s %s' % (rss['title'], rss['link']))
-            cPickle.dump(rss, open('cache.dat', 'wb'), -1)
-
+	if cache.has_key('published_parsed'):
+            if cache['id'] != rss['id'] and cache['published_parsed'] < rss['published_parsed']:
+                #print 'new post'
+                #post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
+                post_update('%s %s' % (rss['title'], rss['link']))
+                cPickle.dump(rss, open('cache.dat', 'wb'), -1)
+	else:
+            if cache['id'] != rss['id']:
+                post_update('%s %s' % (rss['title'], rss['link']))
+                cPickle.dump(rss, open('cache.dat', 'wb'), -1)
 
 if __name__ == "__main__":
     try:
